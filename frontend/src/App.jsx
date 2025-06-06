@@ -6,7 +6,7 @@ import Header from './components/Header';
 import RegisterPage from './pages/RegisterPage';
 import UserDashboard from "./pages/UserDashboard";
 import './App.css'
-import AiInterview from './services/AIInterview';
+import AiInterview from './services/AiInterview';
 import CreateMeeting from './components/CreateMeeting';
 import InterviewRoom from './components/InterviewRoom';
 
