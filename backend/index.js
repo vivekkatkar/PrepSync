@@ -150,9 +150,24 @@ app.use((error, req, res, next) => {
 });
 
 // Socket.io setup
+// const io = new Server(server, {
+//   cors: {
+//     origin: ['http://localhost:5173', 'http://localhost:3000'],
+//     credentials: true,
+//     methods: ['GET', 'POST']
+//   },
+//   transports: ['websocket', 'polling'],
+//   pingTimeout: 60000,
+//   pingInterval: 25000
+// });
+
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:3000'],
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://mockmate.vivek-katkar.site'  // add your production frontend URL here
+    ],
     credentials: true,
     methods: ['GET', 'POST']
   },
