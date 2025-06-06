@@ -1,0 +1,212 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output    = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Prisma schema for Mock Interview Platform
+
+// Enums
+enum PlanType {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum Role {
+  USER
+  ADMIN
+  EXPERT
+}
+
+enum FeatureType {
+  AI_INTERVIEW
+  ONE_TO_ONE_INTERVIEW
+  RESUME_ANALYZER
+  INTERVIEW_SCHEDULING
+  INTERVIEW_RECORDING
+  AI_INTERVIEW_ANALYSIS
+  DISCUSSION_FORUM
+  DASHBOARD
+}
+
+enum FeatureLevel {
+  NONE
+  BASIC
+  LIMITED
+  FULL
+  ADVANCED
+  UNLIMITED
+}
+
+// User Model
+model User {
+  id           String             @id @default(cuid())
+  name         String
+  email        String             @unique
+  passwordHash String
+  mobile       String?
+  bio          String?
+  designation  String?
+  role         Role               @default(USER)
+  subscriptionId String?
+  subscription Subscription?      @relation(fields: [subscriptionId], references: [id])
+  interviews   Interview[]
+  interviewsScheduled Interview[] @relation("ScheduledWithUser")
+  resumes      Resume[]
+  reports      Report[]
+  forumPosts   ForumPost[]
+  forumReplies ForumReply[]
+  jobRecommendations JobRecommendation[]
+  featureUsages  UserFeatureUsage[]
+  createdAt    DateTime           @default(now())
+  isOnline  Boolean  @default(false)
+}
+
+// Subscription Plan Model
+model Subscription {
+  id        String        @id @default(cuid())
+  type      PlanType      @unique
+  startDate DateTime
+  endDate   DateTime
+  users     User[]
+  features  PlanFeature[]
+}
+
+// Enum-based Feature Mapping with Details
+model PlanFeature {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  feature        FeatureType
+  level          FeatureLevel
+  quota          Int?
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+}
+
+// Tracks user feature usage to enforce quotas
+model UserFeatureUsage {
+  id         String      @id @default(cuid())
+  userId     String
+  feature    FeatureType
+  usedCount  Int         @default(0)
+  lastUsedAt DateTime?
+  user       User        @relation(fields: [userId], references: [id])
+
+  @@unique([userId, feature]) // <--- ADDED THIS LINE
+}
+
+// Interview Model
+// model Interview {
+//   id            String     @id @default(cuid())
+//   userId        String
+//   user          User       @relation(fields: [userId], references: [id])
+//   type          String     // HR, Technical, etc.
+//   aiBased       Boolean
+//   scheduledWith String?
+//   scheduledAt   DateTime?
+//   recordingUrl  String?
+//   aiAnalysis    String?
+//   createdAt     DateTime   @default(now())
+//   reports       Report[]
+// }
+
+// model Interview {
+//   id            String     @id @default(cuid())
+//   roomId        String?    @unique // Added roomId field
+//   userId        String
+//   user          User       @relation(fields: [userId], references: [id])
+//   type          String     // HR, Technical, etc.
+//   aiBased       Boolean
+//   scheduledWith String?
+//   scheduledAt   DateTime?
+//   recordingUrl  String?
+//   aiAnalysis    String?
+//   meetLink      String?    // <-- NEW optional field for meet link (one-to-one interview)
+//   createdAt     DateTime   @default(now())
+//   reports       Report[]
+// }
+
+model Interview {
+  id              String     @id @default(cuid())
+  roomId          String?    @unique
+  userId          String
+  user            User       @relation(fields: [userId], references: [id])
+  type            String     // HR, Technical, etc.
+  aiBased         Boolean
+  scheduledWithId String?
+  scheduledWith   User?      @relation("ScheduledWithUser", fields: [scheduledWithId], references: [id])
+  scheduledAt     DateTime?
+  recordingUrl    String?
+  aiAnalysis      String?
+  meetLink        String?    // Meet link for one-to-one interview
+  createdAt       DateTime   @default(now())
+  reports         Report[]
+}
+
+
+
+// Resume Model
+model Resume {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  fileUrl       String
+  aiFeedback    String?
+  generatedByAI Boolean  @default(false)
+  createdAt     DateTime @default(now())
+}
+
+// Report Model
+model Report {
+  id          String    @id @default(cuid())
+  userId      String
+  interviewId String?
+  user        User      @relation(fields: [userId], references: [id])
+  interview   Interview? @relation(fields: [interviewId], references: [id])
+  insights    String?
+  createdAt   DateTime  @default(now())
+}
+
+// Forum Post Model
+model ForumPost {
+  id         String       @id @default(cuid())
+  userId     String
+  user       User         @relation(fields: [userId], references: [id])
+  title      String
+  content    String
+  createdAt  DateTime     @default(now())
+  replies    ForumReply[]
+}
+
+// Forum Reply Model
+model ForumReply {
+  id        String    @id @default(cuid())
+  postId    String
+  userId    String
+  content   String
+  createdAt DateTime  @default(now())
+  post      ForumPost @relation(fields: [postId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+// Job Recommendation Model
+model JobRecommendation {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  jobTitle  String
+  company   String
+  url       String
+  matchedBy String
+  createdAt DateTime @default(now())
+}
