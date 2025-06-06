@@ -508,9 +508,17 @@ export default function AiInterview() {
 
     // const ws = new WebSocket(`ws://localhost:3000/ws/ai-interview?token=${token}`);
 
+    // ws.onopen = () => {
+    //   setConnected(true);
+    //   console.log('WebSocket connected');
+    // };
+
     ws.onopen = () => {
       setConnected(true);
       console.log('WebSocket connected');
+      
+      // Automatically start interview if we're waiting
+      handleStartInterview(); // ✅ move this here
     };
 
     ws.onmessage = (event) => {
@@ -542,16 +550,24 @@ export default function AiInterview() {
     wsRef.current = ws;
   };
 
+  // const begin = () => {
+  //   if (!connected) {
+  //     connectWebSocket();
+  //     setTimeout(() => {
+  //       handleStartInterview();
+  //     }, 500);
+  //   } else {
+  //     handleStartInterview();
+  //   }
+  // };
+
   const begin = () => {
-    if (!connected) {
-      connectWebSocket();
-      setTimeout(() => {
-        handleStartInterview();
-      }, 500);
-    } else {
-      handleStartInterview();
-    }
-  };
+  if (!connected) {
+    connectWebSocket(); // ⏳ wait for `onopen` to trigger `handleStartInterview()`
+  } else {
+    handleStartInterview(); // ✅ call immediately if already connected
+  }
+};
 
   const handleStartInterview = () => {
     if (eligibility.level === 'BASIC') {
