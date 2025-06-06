@@ -48,14 +48,13 @@ if (!fs.existsSync(recordingsDir)) {
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-
-    callback(null, true);
+    callback(null, origin); // ← this reflects the exact origin string in response
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 
 // Session configuration
 app.use(session({
