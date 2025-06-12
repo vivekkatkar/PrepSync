@@ -13,7 +13,7 @@ import InterviewRoom from './components/InterviewRoom';
 function App() {
   return (
     <BrowserRouter>
-      <Header />
+      {/* <Header /> */}
 
       <Routes>
         <Route path="/" element={<LandingPage />} />

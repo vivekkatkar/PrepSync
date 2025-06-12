@@ -51,26 +51,27 @@ export default function ProfileTab({ profile, onProfileUpdated }) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>
-          <p className="text-purple-200">Loading profile...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading profile...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl">
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden">
+    <div className="max-w-4xl mx-auto text-white font-inter">
+      <div className="bg-[#1a1a1a]/50 backdrop-blur-xl rounded-2xl border border-white/10 shadow-lg transition-all duration-300">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 p-8 border-b border-white/10">
+        <div className="bg-gradient-to-r from-[#0f0f0f] to-[#1a1a1a] p-8 border-b border-white/10">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                <User className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-gradient-to-br from-white/10 to-white/5 rounded-full flex items-center justify-center shadow-inner">
+                {/* <User className="w-8 h-8 text-white" /> */}
+                <User className="w-8 h-8 stroke-pink-500" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white">Profile Information</h2>
-                <p className="text-purple-200">Manage your personal details</p>
+                <h2 className="text-2xl font-semibold text-white">Profile Information</h2>
+                <p className="text-gray-400">Manage your personal details</p>
               </div>
             </div>
             {editing ? (
@@ -78,7 +79,7 @@ export default function ProfileTab({ profile, onProfileUpdated }) {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                  className="flex items-center space-x-2 px-4 py-2 bg-green-800 hover:bg-white/20 text-white rounded-lg transition-all duration-300 backdrop-blur-md hover:scale-105 disabled:opacity-50"
                 >
                   <Save className="w-4 h-4" />
                   <span>{saving ? 'Saving...' : 'Save'}</span>
@@ -89,7 +90,7 @@ export default function ProfileTab({ profile, onProfileUpdated }) {
                     setEditing(false);
                     setError('');
                   }}
-                  className="flex items-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                  className="flex items-center space-x-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all duration-300 backdrop-blur-md hover:scale-105"
                 >
                   <X className="w-4 h-4" />
                   <span>Cancel</span>
@@ -98,9 +99,9 @@ export default function ProfileTab({ profile, onProfileUpdated }) {
             ) : (
               <button
                 onClick={() => setEditing(true)}
-                className="flex items-center space-x-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-300 backdrop-blur-md hover:scale-105"
               >
-                <Edit2 className="w-4 h-4" />
+                <Edit2 className="w-4 h-4 stroke-purple-400" />
                 <span>Edit Profile</span>
               </button>
             )}
@@ -110,7 +111,7 @@ export default function ProfileTab({ profile, onProfileUpdated }) {
         {/* Form */}
         <div className="p-8">
           {error && (
-            <div className="mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+            <div className="mb-6 p-4 bg-red-900/30 border border-red-500/30 rounded-lg">
               <p className="text-red-400 font-medium">{error}</p>
             </div>
           )}
@@ -123,17 +124,17 @@ export default function ProfileTab({ profile, onProfileUpdated }) {
               { field: 'designation', label: 'Designation', type: 'text', editable: true },
             ].map(({ field, label, type, editable }) => (
               <div key={field} className="space-y-2">
-                <label className="text-purple-200 font-medium">{label}</label>
+                <label className="text-gray-300 font-medium">{label}</label>
                 {editing && editable ? (
                   <input
                     type={type}
                     name={field}
                     value={form[field] || ''}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all backdrop-blur-sm"
                   />
                 ) : (
-                  <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white">
+                  <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white backdrop-blur-sm">
                     {form[field] || 'Not provided'}
                   </div>
                 )}
@@ -143,18 +144,18 @@ export default function ProfileTab({ profile, onProfileUpdated }) {
 
           {/* Bio Field */}
           <div className="mt-6 space-y-2">
-            <label className="text-purple-200 font-medium">Bio</label>
+            <label className="text-gray-300 font-medium">Bio</label>
             {editing ? (
               <textarea
                 name="bio"
                 rows={4}
                 value={form.bio || ''}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
+                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all resize-none backdrop-blur-sm"
                 placeholder="Tell us about yourself..."
               />
             ) : (
-              <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white min-h-[100px]">
+              <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white min-h-[100px] backdrop-blur-sm">
                 {form.bio || 'No bio provided'}
               </div>
             )}

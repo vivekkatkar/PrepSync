@@ -506,13 +506,6 @@ export default function AiInterview() {
 
     const ws = new WebSocket(`${wsProtocol}//${backendWithoutProtocol}/ws/ai-interview?token=${token}`);
 
-    // const ws = new WebSocket(`ws://localhost:3000/ws/ai-interview?token=${token}`);
-
-    // ws.onopen = () => {
-    //   setConnected(true);
-    //   console.log('WebSocket connected');
-    // };
-
     ws.onopen = () => {
       setConnected(true);
       console.log('WebSocket connected');
@@ -648,24 +641,17 @@ export default function AiInterview() {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+
   if (!eligibility)
     return (
-      <div 
-        className="min-h-screen flex items-center justify-center"
+      <div
+        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800"
         style={{
-          background: 'linear-gradient(to bottom right, #0f172a, #581c87, #0f172a)',
-          fontFamily: "'Inter', sans-serif",
+          fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
         }}
       >
-        <div 
-          className="p-8 rounded-xl text-center"
-          style={{
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-          }}
-        >
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
+        <div className="p-8 rounded-2xl text-center bg-white/10 backdrop-blur-lg shadow-2xl border border-white/20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
           <div className="text-white text-xl font-semibold">Checking eligibility...</div>
         </div>
       </div>
@@ -673,23 +659,15 @@ export default function AiInterview() {
 
   if (eligibility.level === 'NONE')
     return (
-      <div 
-        className="min-h-screen flex items-center justify-center"
+      <div
+        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800"
         style={{
-          background: 'linear-gradient(to bottom right, #0f172a, #581c87, #0f172a)',
-          fontFamily: "'Inter', sans-serif",
+          fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
         }}
       >
-        <div 
-          className="p-8 rounded-xl text-center"
-          style={{
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
-          }}
-        >
+        <div className="p-8 rounded-2xl text-center bg-white/10 backdrop-blur-lg shadow-2xl border border-red-400/30">
           <div className="text-red-400 text-xl font-semibold">
-            You don't have subscription or you have exceeded quota 
+            You don't have a subscription or you have exceeded your quota
           </div>
         </div>
       </div>
@@ -697,10 +675,9 @@ export default function AiInterview() {
 
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800"
       style={{
-        background: 'linear-gradient(to bottom right, #0f172a, #581c87, #0f172a)',
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       }}
     >
       {/* Modals */}
@@ -713,7 +690,6 @@ export default function AiInterview() {
         required={true}
         isTextArea={modalState.isTextArea}
       />
-      
       <ResumeModal
         isOpen={resumeModalOpen}
         onClose={() => setResumeModalOpen(false)}
@@ -721,47 +697,38 @@ export default function AiInterview() {
       />
 
       {/* Header */}
-      <div 
-        className="sticky top-0 z-50 border-b border-white/10"
-        style={{
-          background: 'rgba(15, 23, 42, 0.9)',
-          backdropFilter: 'blur(16px)',
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div 
-              className="p-2 rounded-lg"
-              style={{
-                background: 'linear-gradient(to right, #8b5cf6, #ec4899)',
-              }}
-            >
+            <div className="p-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/25">
               <FiBriefcase className="text-white text-lg" />
             </div>
             <div>
-              <h1 className="text-white text-lg font-bold">AI Mock Interview</h1>
-              <p className="text-purple-200 text-xs">Live Interview Session</p>
+              <h1 className="text-white text-lg font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                AI Mock Interview
+              </h1>
+              <p className="text-gray-400 text-sm">Professional Interview Platform</p>
             </div>
           </div>
-          
-          <div className="flex items-center gap-4 text-white text-sm">
-            <div className="flex items-center gap-2">
-              <FiClock className="text-purple-300" />
-              <span className="font-mono">{currentTime.toLocaleTimeString()}</span>
+
+          <div className="flex items-center gap-4 text-gray-300 text-sm">
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-lg px-3 py-1.5 rounded-lg border border-white/20">
+              <FiClock className="text-cyan-400" />
+              <span className="font-mono text-white">{currentTime.toLocaleTimeString()}</span>
             </div>
             {messages.length > 0 && (
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                <span className="font-mono">Duration: {formatTime(interviewDuration)}</span>
+              <div className="flex items-center gap-2 bg-emerald-500/20 backdrop-blur-lg px-3 py-1.5 rounded-lg border border-emerald-400/30">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                <span className="font-mono text-emerald-300">Duration: {formatTime(interviewDuration)}</span>
               </div>
             )}
             {messages.length > 0 && (
               <button
                 onClick={quitInterview}
-                className="px-3 py-1 rounded-full text-xs font-semibold bg-red-600 hover:bg-red-700 transition-colors flex items-center gap-1"
+                className="px-3 py-1.5 rounded-lg text-sm font-medium bg-gradient-to-r from-red-500 to-pink-600 text-white hover:from-red-600 hover:to-pink-700 transition-all duration-300 flex items-center gap-1.5 shadow-lg shadow-red-500/25 hover:shadow-red-500/40 hover:scale-105"
               >
                 <FiXCircle className="text-sm" />
-                Quit
+                End Interview
               </button>
             )}
           </div>
@@ -771,155 +738,107 @@ export default function AiInterview() {
       {messages.length === 0 ? (
         /* Pre-Interview Setup */
         <div className="flex items-center justify-center min-h-[calc(100vh-80px)] p-6">
-          <div 
-            className="w-full max-w-2xl p-8 rounded-2xl"
-            style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              boxShadow: '0 8px 32px 0 rgba(139, 92, 246, 0.15)',
-            }}
-          >
+          <div className="w-full max-w-2xl p-8 rounded-2xl bg-white/10 backdrop-blur-lg shadow-2xl border border-white/20">
             <div className="text-center mb-8">
-              <div 
-                className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center"
-                style={{
-                  background: 'linear-gradient(to right, #8b5cf6, #ec4899)',
-                }}
-              >
-                <FiVideo className="text-white text-3xl" />
+              <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-gradient-to-r from-purple-500 to-pink-600 shadow-lg shadow-purple-500/25">
+                <FiVideo className="text-white text-2xl" />
               </div>
-              <h2 className="text-white text-3xl font-bold mb-2">Ready for Your Live Interview?</h2>
-              <p className="text-purple-200 text-lg">
-                Experience a real-time AI interview with voice interaction
+              <h2 className="text-white text-2xl font-semibold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                Ready for Your Interview?
+              </h2>
+              <p className="text-gray-300 text-lg">
+                Experience a professional AI-powered mock interview session
               </p>
             </div>
 
             {/* Interview Setup Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div 
-                className="p-4 rounded-lg text-center"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                }}
-              >
-                <FiMic className="text-purple-400 text-2xl mx-auto mb-2" />
+              <div className="p-4 rounded-xl text-center bg-white/5 backdrop-blur-lg border border-white/10 hover:bg-white/10 transition-all duration-300 group">
+                <div className="w-10 h-10 rounded-lg mx-auto mb-3 flex items-center justify-center bg-gradient-to-r from-cyan-400 to-blue-500 group-hover:scale-110 transition-transform duration-300">
+                  <FiMic className="text-white text-lg" />
+                </div>
                 <p className="text-white text-sm font-medium">Voice Enabled</p>
-                <p className="text-purple-200 text-xs">Speech Recognition</p>
+                <p className="text-gray-400 text-xs">Speech Recognition</p>
               </div>
-              <div 
-                className="p-4 rounded-lg text-center"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                }}
-              >
-                <FiMonitor className="text-green-400 text-2xl mx-auto mb-2" />
+              <div className="p-4 rounded-xl text-center bg-white/5 backdrop-blur-lg border border-white/10 hover:bg-white/10 transition-all duration-300 group">
+                <div className="w-10 h-10 rounded-lg mx-auto mb-3 flex items-center justify-center bg-gradient-to-r from-emerald-400 to-green-500 group-hover:scale-110 transition-transform duration-300">
+                  <FiMonitor className="text-white text-lg" />
+                </div>
                 <p className="text-white text-sm font-medium">AI Interviewer</p>
-                <p className="text-purple-200 text-xs">Real-time Interaction</p>
+                <p className="text-gray-400 text-xs">Real-time Interaction</p>
               </div>
-              <div 
-                className="p-4 rounded-lg text-center"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                }}
-              >
-                <FiClock className="text-blue-400 text-2xl mx-auto mb-2" />
+              <div className="p-4 rounded-xl text-center bg-white/5 backdrop-blur-lg border border-white/10 hover:bg-white/10 transition-all duration-300 group">
+                <div className="w-10 h-10 rounded-lg mx-auto mb-3 flex items-center justify-center bg-gradient-to-r from-amber-400 to-orange-500 group-hover:scale-110 transition-transform duration-300">
+                  <FiClock className="text-white text-lg" />
+                </div>
                 <p className="text-white text-sm font-medium">Live Session</p>
-                <p className="text-purple-200 text-xs">Real-time Feedback</p>
+                <p className="text-gray-400 text-xs">Real-time Feedback</p>
               </div>
             </div>
 
             <button
               onClick={begin}
               disabled={loading}
-              className="w-full py-4 rounded-xl font-semibold text-lg shadow-lg transition duration-300 disabled:opacity-60"
-              style={{
-                background: loading 
-                  ? 'rgba(139, 92, 246, 0.5)' 
-                  : 'linear-gradient(to right, #8b5cf6, #ec4899)',
-                color: 'white',
-              }}
+              className="w-full py-3.5 rounded-xl font-medium text-lg shadow-lg transition-all duration-300 disabled:opacity-60 hover:shadow-2xl active:scale-[0.98] text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 shadow-cyan-500/25 hover:shadow-cyan-500/40"
             >
               {loading ? (
                 <div className="flex items-center justify-center gap-3">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  Starting Live Interview...
+                  Starting Interview...
                 </div>
               ) : (
-                'Start Live Interview'
+                'Start Interview Session'
               )}
             </button>
           </div>
         </div>
       ) : (
-        
-        <div className="overflow-scroll max-w-7xl mx-auto p-4 h-[calc(100vh-70px)]">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full">
-            
+
+        <div className="overflow-scroll max-w-7xl mx-auto p-6 h-[calc(100vh-80px)]">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
+
             {/* Interviewer Panel */}
-            <div 
-              className="lg:col-span-1 rounded-2xl p-4 flex flex-col"
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                boxShadow: '0 8px 32px 0 rgba(139, 92, 246, 0.15)',
-              }}
-            >
+            <div className="lg:col-span-1 rounded-2xl p-5 flex flex-col bg-white/10 backdrop-blur-lg shadow-2xl border border-white/20">
               {/* AI Interviewer Avatar */}
-              <div className="text-center mb-4">
-                <div 
-                  className="w-20 h-20 rounded-full mx-auto mb-3 flex items-center justify-center relative"
-                  style={{
-                    background: 'linear-gradient(to right, #8b5cf6, #ec4899)',
-                  }}
-                >
-                  <span className="text-3xl">🤖</span>
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 rounded-2xl mx-auto mb-3 flex items-center justify-center relative bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-500/25">
+                  <span className="text-2xl text-white">🤖</span>
                   {loading && (
-                    <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                      <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-400/25">
+                      <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse"></div>
                     </div>
                   )}
                 </div>
-                <h3 className="text-white text-lg font-bold">AI Interviewer</h3>
-                <p className="text-purple-200 text-xs">Live Interview Assistant</p>
+                <h3 className="text-white text-lg font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">AI Interviewer</h3>
+                <p className="text-gray-400 text-sm">Professional Assistant</p>
               </div>
 
               {/* Current Question Display */}
               {currentQuestion && (
-                <div 
-                  className="p-3 rounded-lg mb-4"
-                  style={{
-                    background: 'linear-gradient(to right, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))',
-                    border: '1px solid rgba(139, 92, 246, 0.3)',
-                  }}
-                >
-                  <p className="text-xs text-purple-300 mb-1 font-medium">CURRENT QUESTION:</p>
+                <div className="p-4 rounded-xl mb-5 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-lg border border-blue-400/30">
+                  <p className="text-xs text-cyan-300 mb-2 font-medium uppercase tracking-wide">Current Question</p>
                   <p className="text-white text-sm leading-relaxed">{currentQuestion}</p>
                 </div>
               )}
 
               {/* Status Indicators */}
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-                  <span className="text-purple-200 text-xs">Connection</span>
-                  <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-400 text-xs font-medium">Live</span>
+              <div className="space-y-3 mb-5">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 backdrop-blur-lg border border-white/10">
+                  <span className="text-gray-300 text-sm">Connection</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-lg shadow-emerald-400/50"></div>
+                    <span className="text-emerald-300 text-sm font-medium">Live</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-                  <span className="text-purple-200 text-xs">Questions</span>
-                  <span className="text-white text-xs font-medium">{messages.filter(m => m.role === 'ai').length}</span>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 backdrop-blur-lg border border-white/10">
+                  <span className="text-gray-300 text-sm">Questions</span>
+                  <span className="text-white text-sm font-medium">{messages.filter(m => m.role === 'ai').length}</span>
                 </div>
-                <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-                  <span className="text-purple-200 text-xs">Voice Input</span>
-                  <div className="flex items-center gap-1">
-                    <div className={`w-2 h-2 rounded-full ${isListening ? 'bg-red-500 animate-pulse' : 'bg-gray-500'}`}></div>
-                    <span className={`text-xs font-medium ${isListening ? 'text-red-400' : 'text-gray-400'}`}>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 backdrop-blur-lg border border-white/10">
+                  <span className="text-gray-300 text-sm">Voice Input</span>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${isListening ? 'bg-red-400 animate-pulse shadow-lg shadow-red-400/50' : 'bg-gray-500'}`}></div>
+                    <span className={`text-sm font-medium ${isListening ? 'text-red-300' : 'text-gray-400'}`}>
                       {isListening ? 'Listening' : 'Ready'}
                     </span>
                   </div>
@@ -928,69 +847,49 @@ export default function AiInterview() {
 
               {/* Analysis Indicator */}
               {loading && (
-                <div 
-                  className="p-3 rounded-lg"
-                  style={{
-                    background: 'linear-gradient(to right, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))',
-                    border: '1px solid rgba(139, 92, 246, 0.3)',
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-purple-400"></div>
-                    <span className="text-purple-200 text-xs">Analyzing response...</span>
+                <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 backdrop-blur-lg border border-amber-400/30">
+                  <div className="flex items-center gap-3">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-amber-400"></div>
+                    <span className="text-amber-300 text-sm">Analyzing response...</span>
                   </div>
                 </div>
               )}
             </div>
 
             {/* Interview Conversation */}
-            <div 
-              className="lg:col-span-3 rounded-2xl p-4 flex flex-col"
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                boxShadow: '0 8px 32px 0 rgba(139, 92, 246, 0.15)',
-              }}
-            >
-              {/* Interview History - Only show last 3 exchanges */}
-              <div className="flex-1 overflow-y-auto mb-4 space-y-3" style={{ scrollbarWidth: 'thin' }}>
+            <div className="lg:col-span-3 rounded-2xl p-5 flex flex-col bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-lg shadow-2xl border border-white/10">
+              {/* Interview History */}
+              <div className="flex-1 overflow-y-auto mb-5 space-y-4" style={{ scrollbarWidth: 'thin' }}>
                 {messages.slice(-6).map((msg, i) => (
                   <div
                     key={i}
                     className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {msg.role === 'ai' && (
-                      <div 
-                        className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                        style={{
-                          background: 'linear-gradient(to right, #8b5cf6, #ec4899)',
-                        }}
-                      >
-                        <span className="text-sm">🤖</span>
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-gradient-to-r from-purple-500 to-pink-600 shadow-lg shadow-purple-500/25">
+                        <span className="text-sm text-white">🤖</span>
                       </div>
                     )}
-                    
+
                     <div
-                      className={`max-w-[85%] p-3 rounded-xl ${
+                      className={`max-w-[85%] p-4 rounded-xl backdrop-blur-lg transition-all duration-300 hover:scale-[1.02] ${
                         msg.role === 'ai'
-                          ? 'bg-white/10 border-l-2 border-purple-500'
-                          : 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30'
+                          ? 'bg-white/10 text-white shadow-lg border border-white/20'
+                          : 'bg-gradient-to-r from-cyan-500/80 to-blue-600/80 text-white shadow-lg shadow-cyan-500/25'
                       }`}
-                      style={{
-                        backdropFilter: 'blur(8px)',
-                      }}
                     >
-                      <div className="text-xs text-purple-300 mb-1 font-medium">
-                        {msg.role === 'ai' ? 'INTERVIEWER' : 'YOUR RESPONSE'}
+                      <div className={`text-xs mb-2 font-medium uppercase tracking-wide ${
+                        msg.role === 'ai' ? 'text-gray-400' : 'text-cyan-100'
+                      }`}>
+                        {msg.role === 'ai' ? 'Interviewer' : 'Your Response'}
                       </div>
-                      <div className="text-white text-sm leading-relaxed whitespace-pre-wrap">
+                      <div className="text-sm leading-relaxed whitespace-pre-wrap">
                         {msg.content}
                       </div>
                     </div>
 
                     {msg.role === 'user' && (
-                      <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/25">
                         <FiUser className="text-white text-sm" />
                       </div>
                     )}
@@ -1000,49 +899,42 @@ export default function AiInterview() {
               </div>
 
               {/* Response Input Area */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
+              <div className="space-y-4">
+                <div className="flex items-end gap-3">
                   <textarea
                     rows={3}
                     value={answer}
                     onChange={(e) => setAnswer(e.target.value)}
-                    placeholder="Type your response or use the microphone to speak..."
-                    className="flex-1 p-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-purple-300 resize-none
-                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-60 focus:border-transparent transition-all duration-200"
+                    placeholder="Type your response or use the microphone..."
+                    className="flex-1 p-4 rounded-xl bg-white/10 backdrop-blur-lg border border-white/20 text-white placeholder-gray-400 resize-none
+                    focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300 hover:bg-white/15"
                     disabled={loading}
-                    style={{
-                      backdropFilter: 'blur(8px)',
-                    }}
                   />
-                  
+
                   {/* Microphone Button */}
                   <button
                     onClick={toggleMic}
                     disabled={loading}
-                    className={`p-3 rounded-lg transition duration-300 disabled:opacity-60 ${
-                      isListening 
-                        ? 'bg-red-500 hover:bg-red-600' 
-                        : 'bg-white/10 hover:bg-white/20'
+                    className={`p-4 rounded-xl transition-all duration-300 disabled:opacity-60 shadow-lg hover:scale-105 ${
+                      isListening
+                        ? 'bg-gradient-to-r from-red-500 to-pink-600 text-white hover:from-red-600 hover:to-pink-700 shadow-red-500/25'
+                        : 'bg-white/10 backdrop-blur-lg text-gray-300 hover:bg-white/20 border border-white/20'
                     }`}
-                    style={{
-                      backdropFilter: 'blur(8px)',
-                      border: isListening ? '2px solid #ef4444' : '1px solid rgba(255, 255, 255, 0.2)',
-                    }}
                   >
                     {isListening ? (
-                      <FiMicOff className="text-white text-xl" />
+                      <FiMicOff className="text-xl" />
                     ) : (
-                      <FiMic className="text-white text-xl" />
+                      <FiMic className="text-xl" />
                     )}
                   </button>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 text-xs">
-                    <span className="text-purple-200">{answer.length} characters</span>
+                  <div className="flex items-center gap-4 text-sm">
+                    <span className="text-gray-400">{answer.length} characters</span>
                     {isListening && (
-                      <span className="text-red-400 flex items-center gap-1">
-                        <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                      <span className="text-red-300 flex items-center gap-2">
+                        <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse shadow-lg shadow-red-400/50"></div>
                         Recording...
                       </span>
                     )}
@@ -1051,22 +943,16 @@ export default function AiInterview() {
                   <button
                     onClick={respond}
                     disabled={loading || !answer.trim()}
-                    className="px-5 py-2 rounded-lg font-semibold shadow-lg transition duration-300 disabled:opacity-60 flex items-center gap-2"
-                    style={{
-                      background: loading || !answer.trim() 
-                        ? 'rgba(139, 92, 246, 0.3)' 
-                        : 'linear-gradient(to right, #8b5cf6, #ec4899)',
-                      color: 'white',
-                    }}
+                    className="px-6 py-2.5 rounded-xl font-medium shadow-lg transition-all duration-300 disabled:opacity-60 flex items-center gap-2 hover:shadow-2xl active:scale-[0.98] text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 shadow-cyan-500/25 hover:shadow-cyan-500/40"
                   >
                     {loading ? (
                       <>
-                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                         Submitting...
                       </>
                     ) : (
                       <>
-                        Submit
+                        Submit Response
                         <FiSend className="text-sm" />
                       </>
                     )}
@@ -1079,4 +965,437 @@ export default function AiInterview() {
       )}
     </div>
   );
+
+
+  // if (!eligibility)
+  //   return (
+  //     <div 
+  //       className="min-h-screen flex items-center justify-center"
+  //       style={{
+  //         background: 'linear-gradient(to bottom right, #0f172a, #581c87, #0f172a)',
+  //         fontFamily: "'Inter', sans-serif",
+  //       }}
+  //     >
+  //       <div 
+  //         className="p-8 rounded-xl text-center"
+  //         style={{
+  //           background: 'rgba(255, 255, 255, 0.1)',
+  //           backdropFilter: 'blur(12px)',
+  //           border: '1px solid rgba(255, 255, 255, 0.2)',
+  //         }}
+  //       >
+  //         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
+  //         <div className="text-white text-xl font-semibold">Checking eligibility...</div>
+  //       </div>
+  //     </div>
+  //   );
+
+  // if (eligibility.level === 'NONE')
+  //   return (
+  //     <div 
+  //       className="min-h-screen flex items-center justify-center"
+  //       style={{
+  //         background: 'linear-gradient(to bottom right, #0f172a, #581c87, #0f172a)',
+  //         fontFamily: "'Inter', sans-serif",
+  //       }}
+  //     >
+  //       <div 
+  //         className="p-8 rounded-xl text-center"
+  //         style={{
+  //           background: 'rgba(255, 255, 255, 0.1)',
+  //           backdropFilter: 'blur(12px)',
+  //           border: '1px solid rgba(239, 68, 68, 0.3)',
+  //         }}
+  //       >
+  //         <div className="text-red-400 text-xl font-semibold">
+  //           You don't have subscription or you have exceeded quota 
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+
+  // return (
+  //   <div
+  //     className="min-h-screen"
+  //     style={{
+  //       background: 'linear-gradient(to bottom right, #0f172a, #581c87, #0f172a)',
+  //       fontFamily: "'Inter', sans-serif",
+  //     }}
+  //   >
+  //     {/* Modals */}
+  //     <InputModal
+  //       isOpen={modalState.isOpen}
+  //       onClose={closeModal}
+  //       onSubmit={handleModalSubmit}
+  //       title={modalState.title}
+  //       placeholder={modalState.placeholder}
+  //       required={true}
+  //       isTextArea={modalState.isTextArea}
+  //     />
+      
+  //     <ResumeModal
+  //       isOpen={resumeModalOpen}
+  //       onClose={() => setResumeModalOpen(false)}
+  //       onSubmit={handleResumeSubmit}
+  //     />
+
+  //     {/* Header */}
+  //     <div 
+  //       className="sticky top-0 z-50 border-b border-white/10"
+  //       style={{
+  //         background: 'rgba(15, 23, 42, 0.9)',
+  //         backdropFilter: 'blur(16px)',
+  //       }}
+  //     >
+  //       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+  //         <div className="flex items-center gap-4">
+  //           <div 
+  //             className="p-2 rounded-lg"
+  //             style={{
+  //               background: 'linear-gradient(to right, #8b5cf6, #ec4899)',
+  //             }}
+  //           >
+  //             <FiBriefcase className="text-white text-lg" />
+  //           </div>
+  //           <div>
+  //             <h1 className="text-white text-lg font-bold">AI Mock Interview</h1>
+  //             <p className="text-purple-200 text-xs">Live Interview Session</p>
+  //           </div>
+  //         </div>
+          
+  //         <div className="flex items-center gap-4 text-white text-sm">
+  //           <div className="flex items-center gap-2">
+  //             <FiClock className="text-purple-300" />
+  //             <span className="font-mono">{currentTime.toLocaleTimeString()}</span>
+  //           </div>
+  //           {messages.length > 0 && (
+  //             <div className="flex items-center gap-2">
+  //               <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+  //               <span className="font-mono">Duration: {formatTime(interviewDuration)}</span>
+  //             </div>
+  //           )}
+  //           {messages.length > 0 && (
+  //             <button
+  //               onClick={quitInterview}
+  //               className="px-3 py-1 rounded-full text-xs font-semibold bg-red-600 hover:bg-red-700 transition-colors flex items-center gap-1"
+  //             >
+  //               <FiXCircle className="text-sm" />
+  //               Quit
+  //             </button>
+  //           )}
+  //         </div>
+  //       </div>
+  //     </div>
+
+  //     {messages.length === 0 ? (
+  //       /* Pre-Interview Setup */
+  //       <div className="flex items-center justify-center min-h-[calc(100vh-80px)] p-6">
+  //         <div 
+  //           className="w-full max-w-2xl p-8 rounded-2xl"
+  //           style={{
+  //             background: 'rgba(255, 255, 255, 0.1)',
+  //             backdropFilter: 'blur(12px)',
+  //             border: '1px solid rgba(255, 255, 255, 0.2)',
+  //             boxShadow: '0 8px 32px 0 rgba(139, 92, 246, 0.15)',
+  //           }}
+  //         >
+  //           <div className="text-center mb-8">
+  //             <div 
+  //               className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center"
+  //               style={{
+  //                 background: 'linear-gradient(to right, #8b5cf6, #ec4899)',
+  //               }}
+  //             >
+  //               <FiVideo className="text-white text-3xl" />
+  //             </div>
+  //             <h2 className="text-white text-3xl font-bold mb-2">Ready for Your Live Interview?</h2>
+  //             <p className="text-purple-200 text-lg">
+  //               Experience a real-time AI interview with voice interaction
+  //             </p>
+  //           </div>
+
+  //           {/* Interview Setup Cards */}
+  //           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+  //             <div 
+  //               className="p-4 rounded-lg text-center"
+  //               style={{
+  //                 background: 'rgba(255, 255, 255, 0.05)',
+  //                 border: '1px solid rgba(255, 255, 255, 0.1)',
+  //               }}
+  //             >
+  //               <FiMic className="text-purple-400 text-2xl mx-auto mb-2" />
+  //               <p className="text-white text-sm font-medium">Voice Enabled</p>
+  //               <p className="text-purple-200 text-xs">Speech Recognition</p>
+  //             </div>
+  //             <div 
+  //               className="p-4 rounded-lg text-center"
+  //               style={{
+  //                 background: 'rgba(255, 255, 255, 0.05)',
+  //                 border: '1px solid rgba(255, 255, 255, 0.1)',
+  //               }}
+  //             >
+  //               <FiMonitor className="text-green-400 text-2xl mx-auto mb-2" />
+  //               <p className="text-white text-sm font-medium">AI Interviewer</p>
+  //               <p className="text-purple-200 text-xs">Real-time Interaction</p>
+  //             </div>
+  //             <div 
+  //               className="p-4 rounded-lg text-center"
+  //               style={{
+  //                 background: 'rgba(255, 255, 255, 0.05)',
+  //                 border: '1px solid rgba(255, 255, 255, 0.1)',
+  //               }}
+  //             >
+  //               <FiClock className="text-blue-400 text-2xl mx-auto mb-2" />
+  //               <p className="text-white text-sm font-medium">Live Session</p>
+  //               <p className="text-purple-200 text-xs">Real-time Feedback</p>
+  //             </div>
+  //           </div>
+
+  //           <button
+  //             onClick={begin}
+  //             disabled={loading}
+  //             className="w-full py-4 rounded-xl font-semibold text-lg shadow-lg transition duration-300 disabled:opacity-60"
+  //             style={{
+  //               background: loading 
+  //                 ? 'rgba(139, 92, 246, 0.5)' 
+  //                 : 'linear-gradient(to right, #8b5cf6, #ec4899)',
+  //               color: 'white',
+  //             }}
+  //           >
+  //             {loading ? (
+  //               <div className="flex items-center justify-center gap-3">
+  //                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+  //                 Starting Live Interview...
+  //               </div>
+  //             ) : (
+  //               'Start Live Interview'
+  //             )}
+  //           </button>
+  //         </div>
+  //       </div>
+  //     ) : (
+        
+  //       <div className="overflow-scroll max-w-7xl mx-auto p-4 h-[calc(100vh-70px)]">
+  //         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full">
+            
+  //           {/* Interviewer Panel */}
+  //           <div 
+  //             className="lg:col-span-1 rounded-2xl p-4 flex flex-col"
+  //             style={{
+  //               background: 'rgba(255, 255, 255, 0.1)',
+  //               backdropFilter: 'blur(12px)',
+  //               border: '1px solid rgba(255, 255, 255, 0.2)',
+  //               boxShadow: '0 8px 32px 0 rgba(139, 92, 246, 0.15)',
+  //             }}
+  //           >
+  //             {/* AI Interviewer Avatar */}
+  //             <div className="text-center mb-4">
+  //               <div 
+  //                 className="w-20 h-20 rounded-full mx-auto mb-3 flex items-center justify-center relative"
+  //                 style={{
+  //                   background: 'linear-gradient(to right, #8b5cf6, #ec4899)',
+  //                 }}
+  //               >
+  //                 <span className="text-3xl">🤖</span>
+  //                 {loading && (
+  //                   <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+  //                     <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+  //                   </div>
+  //                 )}
+  //               </div>
+  //               <h3 className="text-white text-lg font-bold">AI Interviewer</h3>
+  //               <p className="text-purple-200 text-xs">Live Interview Assistant</p>
+  //             </div>
+
+  //             {/* Current Question Display */}
+  //             {currentQuestion && (
+  //               <div 
+  //                 className="p-3 rounded-lg mb-4"
+  //                 style={{
+  //                   background: 'linear-gradient(to right, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))',
+  //                   border: '1px solid rgba(139, 92, 246, 0.3)',
+  //                 }}
+  //               >
+  //                 <p className="text-xs text-purple-300 mb-1 font-medium">CURRENT QUESTION:</p>
+  //                 <p className="text-white text-sm leading-relaxed">{currentQuestion}</p>
+  //               </div>
+  //             )}
+
+  //             {/* Status Indicators */}
+  //             <div className="space-y-2 mb-4">
+  //               <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+  //                 <span className="text-purple-200 text-xs">Connection</span>
+  //                 <div className="flex items-center gap-1">
+  //                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+  //                   <span className="text-green-400 text-xs font-medium">Live</span>
+  //                 </div>
+  //               </div>
+  //               <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+  //                 <span className="text-purple-200 text-xs">Questions</span>
+  //                 <span className="text-white text-xs font-medium">{messages.filter(m => m.role === 'ai').length}</span>
+  //               </div>
+  //               <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+  //                 <span className="text-purple-200 text-xs">Voice Input</span>
+  //                 <div className="flex items-center gap-1">
+  //                   <div className={`w-2 h-2 rounded-full ${isListening ? 'bg-red-500 animate-pulse' : 'bg-gray-500'}`}></div>
+  //                   <span className={`text-xs font-medium ${isListening ? 'text-red-400' : 'text-gray-400'}`}>
+  //                     {isListening ? 'Listening' : 'Ready'}
+  //                   </span>
+  //                 </div>
+  //               </div>
+  //             </div>
+
+  //             {/* Analysis Indicator */}
+  //             {loading && (
+  //               <div 
+  //                 className="p-3 rounded-lg"
+  //                 style={{
+  //                   background: 'linear-gradient(to right, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))',
+  //                   border: '1px solid rgba(139, 92, 246, 0.3)',
+  //                 }}
+  //               >
+  //                 <div className="flex items-center gap-2">
+  //                   <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-purple-400"></div>
+  //                   <span className="text-purple-200 text-xs">Analyzing response...</span>
+  //                 </div>
+  //               </div>
+  //             )}
+  //           </div>
+
+  //           {/* Interview Conversation */}
+  //           <div 
+  //             className="lg:col-span-3 rounded-2xl p-4 flex flex-col"
+  //             style={{
+  //               background: 'rgba(255, 255, 255, 0.1)',
+  //               backdropFilter: 'blur(12px)',
+  //               border: '1px solid rgba(255, 255, 255, 0.2)',
+  //               boxShadow: '0 8px 32px 0 rgba(139, 92, 246, 0.15)',
+  //             }}
+  //           >
+  //             {/* Interview History - Only show last 3 exchanges */}
+  //             <div className="flex-1 overflow-y-auto mb-4 space-y-3" style={{ scrollbarWidth: 'thin' }}>
+  //               {messages.slice(-6).map((msg, i) => (
+  //                 <div
+  //                   key={i}
+  //                   className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+  //                 >
+  //                   {msg.role === 'ai' && (
+  //                     <div 
+  //                       className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+  //                       style={{
+  //                         background: 'linear-gradient(to right, #8b5cf6, #ec4899)',
+  //                       }}
+  //                     >
+  //                       <span className="text-sm">🤖</span>
+  //                     </div>
+  //                   )}
+                    
+  //                   <div
+  //                     className={`max-w-[85%] p-3 rounded-xl ${
+  //                       msg.role === 'ai'
+  //                         ? 'bg-white/10 border-l-2 border-purple-500'
+  //                         : 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30'
+  //                     }`}
+  //                     style={{
+  //                       backdropFilter: 'blur(8px)',
+  //                     }}
+  //                   >
+  //                     <div className="text-xs text-purple-300 mb-1 font-medium">
+  //                       {msg.role === 'ai' ? 'INTERVIEWER' : 'YOUR RESPONSE'}
+  //                     </div>
+  //                     <div className="text-white text-sm leading-relaxed whitespace-pre-wrap">
+  //                       {msg.content}
+  //                     </div>
+  //                   </div>
+
+  //                   {msg.role === 'user' && (
+  //                     <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+  //                       <FiUser className="text-white text-sm" />
+  //                     </div>
+  //                   )}
+  //                 </div>
+  //               ))}
+  //               <div ref={messagesEndRef} />
+  //             </div>
+
+  //             {/* Response Input Area */}
+  //             <div className="space-y-3">
+  //               <div className="flex items-center gap-2">
+  //                 <textarea
+  //                   rows={3}
+  //                   value={answer}
+  //                   onChange={(e) => setAnswer(e.target.value)}
+  //                   placeholder="Type your response or use the microphone to speak..."
+  //                   className="flex-1 p-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-purple-300 resize-none
+  //                   focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-60 focus:border-transparent transition-all duration-200"
+  //                   disabled={loading}
+  //                   style={{
+  //                     backdropFilter: 'blur(8px)',
+  //                   }}
+  //                 />
+                  
+  //                 {/* Microphone Button */}
+  //                 <button
+  //                   onClick={toggleMic}
+  //                   disabled={loading}
+  //                   className={`p-3 rounded-lg transition duration-300 disabled:opacity-60 ${
+  //                     isListening 
+  //                       ? 'bg-red-500 hover:bg-red-600' 
+  //                       : 'bg-white/10 hover:bg-white/20'
+  //                   }`}
+  //                   style={{
+  //                     backdropFilter: 'blur(8px)',
+  //                     border: isListening ? '2px solid #ef4444' : '1px solid rgba(255, 255, 255, 0.2)',
+  //                   }}
+  //                 >
+  //                   {isListening ? (
+  //                     <FiMicOff className="text-white text-xl" />
+  //                   ) : (
+  //                     <FiMic className="text-white text-xl" />
+  //                   )}
+  //                 </button>
+  //               </div>
+
+  //               <div className="flex items-center justify-between">
+  //                 <div className="flex items-center gap-3 text-xs">
+  //                   <span className="text-purple-200">{answer.length} characters</span>
+  //                   {isListening && (
+  //                     <span className="text-red-400 flex items-center gap-1">
+  //                       <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+  //                       Recording...
+  //                     </span>
+  //                   )}
+  //                 </div>
+
+  //                 <button
+  //                   onClick={respond}
+  //                   disabled={loading || !answer.trim()}
+  //                   className="px-5 py-2 rounded-lg font-semibold shadow-lg transition duration-300 disabled:opacity-60 flex items-center gap-2"
+  //                   style={{
+  //                     background: loading || !answer.trim() 
+  //                       ? 'rgba(139, 92, 246, 0.3)' 
+  //                       : 'linear-gradient(to right, #8b5cf6, #ec4899)',
+  //                     color: 'white',
+  //                   }}
+  //                 >
+  //                   {loading ? (
+  //                     <>
+  //                       <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+  //                       Submitting...
+  //                     </>
+  //                   ) : (
+  //                     <>
+  //                       Submit
+  //                       <FiSend className="text-sm" />
+  //                     </>
+  //                   )}
+  //                 </button>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
 }

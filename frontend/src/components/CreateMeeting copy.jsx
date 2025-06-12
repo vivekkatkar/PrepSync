@@ -61,7 +61,14 @@ export default function CreateInterview() {
       alert(`Interview room created! Room ID: ${res.data.roomId}`);
     } catch (err) {
       console.error('Error creating interview:', err);
-      setError(err.response?.data?.error || 'Failed to create interview');
+      const message = err.response?.data?.message;
+
+      console.log(message);
+      if (message === 'No one is currently available for an interview. Please try again later.') {
+        alert('No other users are online right now. Please try again later.');
+      } else {
+        setError(message || 'Failed to create interview');
+      }
     } finally {
       setLoading(false);
     }

@@ -34,7 +34,6 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
 });
 
-// GET /user/features
 router.get('/features', authenticateToken, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
@@ -66,7 +65,6 @@ router.get('/features', authenticateToken, async (req, res) => {
   }
 });
 
-// GET /user/profile
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
@@ -102,7 +100,6 @@ router.get('/profile', authenticateToken, async (req, res) => {
   }
 });
 
-// PUT /user/profile
 router.put('/profile', authenticateToken, async (req, res) => {
   try {
     const { name, mobile, bio, designation } = req.body;
@@ -142,7 +139,6 @@ router.put('/profile', authenticateToken, async (req, res) => {
   }
 });
 
-// POST /user/resume
 router.post('/resume', authenticateToken, upload.single('resume'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
@@ -150,7 +146,6 @@ router.post('/resume', authenticateToken, upload.single('resume'), async (req, r
     const userId = req.user.id;
     const resumeUrl = `/uploads/resumes/${req.file.filename}`;
 
-    // Delete old resume file if exists
     const oldResume = await prisma.resume.findFirst({
       where: { userId },
       orderBy: { createdAt: 'desc' },
@@ -163,7 +158,6 @@ router.post('/resume', authenticateToken, upload.single('resume'), async (req, r
       await prisma.resume.delete({ where: { id: oldResume.id } });
     }
 
-    // Save new resume
     await prisma.resume.create({
       data: {
         userId,
@@ -178,7 +172,6 @@ router.post('/resume', authenticateToken, upload.single('resume'), async (req, r
   }
 });
 
-// DELETE /user/resume
 router.delete('/resume', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -202,7 +195,20 @@ router.delete('/resume', authenticateToken, async (req, res) => {
   }
 });
 
-// PUT /user/subscription
+router.get('/plans', authenticateToken, async (req, res) => {
+ const plans = PLAN_FEATURES;
+  const formattedPlans = Object.entries(plans).map(([key, val]) => ({
+    plan: key,
+    features: Object.keys(val).map(feature => ({
+      feature,
+      level: val[feature].level,
+      quota: val[feature].quota,
+    })),
+  }));
+
+  return res.json(formattedPlans);
+});
+
 router.put('/subscription', authenticateToken, async (req, res) => {
   try {
     const { plan } = req.body;
@@ -211,7 +217,6 @@ router.put('/subscription', authenticateToken, async (req, res) => {
       return res.status(400).json({ message: 'Invalid plan type' });
     }
 
-    // Find subscription ID by plan type
     const sub = await prisma.subscription.findUnique({
       where: { type: plan },
     });

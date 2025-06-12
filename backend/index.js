@@ -23,11 +23,9 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
-// Fix __dirname in ES modules:
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure uploads directories exist
 const uploadsDir = path.join(process.cwd(), 'uploads');
 const recordingsDir = path.join(uploadsDir, 'recordings');
 
@@ -38,14 +36,6 @@ if (!fs.existsSync(recordingsDir)) {
   fs.mkdirSync(recordingsDir, { recursive: true });
 }
 
-// CORS configuration
-// app.use(cors({
-//   origin: ['http://localhost:5173', 'http://localhost:3000'],
-//   credentials: true,
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// }));
-
 app.use(cors({
   origin: true,   
   credentials: true,
@@ -53,25 +43,21 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Session configuration
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: false, // set to true with HTTPS in production
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    secure: false, 
+    maxAge: 24 * 60 * 60 * 1000 
   }
 }));
 
-// Body parsing middleware
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Static uploads folder
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
-// Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
@@ -80,13 +66,11 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API Routes
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/services/ai-interview", aiInterviewRoutes);
 app.use("/interviews", interviewRoutes);
 
-// Multer setup for recordings upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(process.cwd(), 'uploads/recordings'));
@@ -101,7 +85,7 @@ const storage = multer.diskStorage({
 const upload = multer({ 
   storage,
   limits: {
-    fileSize: 500 * 1024 * 1024, // 500MB limit
+    fileSize: 500 * 1024 * 1024, 
   },
   fileFilter: (req, file, cb) => {
     // Accept video files
@@ -113,7 +97,6 @@ const upload = multer({
   }
 });
 
-// Recording upload endpoint
 app.post('/upload-recording', upload.single('recording'), (req, res) => {
   try {
     if (!req.file) {
@@ -134,7 +117,6 @@ app.post('/upload-recording', upload.single('recording'), (req, res) => {
   }
 });
 
-// Error handling middleware for multer
 app.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
@@ -149,24 +131,12 @@ app.use((error, req, res, next) => {
   next(error);
 });
 
-// Socket.io setup
-// const io = new Server(server, {
-//   cors: {
-//     origin: ['http://localhost:5173', 'http://localhost:3000'],
-//     credentials: true,
-//     methods: ['GET', 'POST']
-//   },
-//   transports: ['websocket', 'polling'],
-//   pingTimeout: 60000,
-//   pingInterval: 25000
-// });
-
 const io = new Server(server, {
   cors: {
     origin: [
       'http://localhost:5173',
       'http://localhost:3000',
-      'https://mockmate.vivek-katkar.site'  // add your production frontend URL here
+      'https://mockmate.vivek-katkar.site'  
     ],
     credentials: true,
     methods: ['GET', 'POST']
@@ -176,11 +146,9 @@ const io = new Server(server, {
   pingInterval: 25000
 });
 
-// Initialize WebSocket servers
 initializeAiInterviewWebSocket(server);
 initializePeerInterviewWebSocket(io);
 
-// Socket.io connection logging
 io.on('connection', (socket) => {
   console.log('Socket connected:', socket.id);
   
@@ -189,11 +157,9 @@ io.on('connection', (socket) => {
   });
 });
 
-// Fallback route for React SPA (excluding known API prefixes)
 app.get(/^\/(?!auth|user|services|interviews|upload-recording|uploads|health).*/, (req, res) => {
   const indexFile = path.join(__dirname, 'client/build', 'index.html');
   
-  // Check if build file exists, otherwise send a basic response
   if (fs.existsSync(indexFile)) {
     res.sendFile(indexFile);
   } else {
@@ -204,7 +170,6 @@ app.get(/^\/(?!auth|user|services|interviews|upload-recording|uploads|health).*/
   }
 });
 
-// Global error handler
 app.use((err, req, res, next) => {
   console.error('Global error handler:', err);
   
@@ -216,7 +181,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully');
   server.close(() => {
@@ -233,7 +197,6 @@ process.on('SIGINT', () => {
   });
 });
 
-// Start server
 server.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📁 Uploads directory: ${uploadsDir}`);

@@ -10,7 +10,6 @@ router.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    // Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
@@ -18,7 +17,6 @@ router.post('/register', async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Find or create FREE subscription plan
     let freePlan = await prisma.subscription.findUnique({ where: { type: 'FREE' } });
 
     if (!freePlan) {
@@ -31,7 +29,6 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Create user
     const user = await prisma.user.create({
       data: {
         name,
@@ -42,12 +39,10 @@ router.post('/register', async (req, res) => {
       },
     });
 
-    // Get all features of the free plan
     const planFeatures = await prisma.planFeature.findMany({
       where: { subscriptionId: freePlan.id },
     });
 
-    // Initialize user feature usage for each plan feature
     const usageCreateData = planFeatures.map((pf) => ({
       userId: user.id,
       feature: pf.feature,
@@ -113,7 +108,6 @@ router.post('/logout', async (req, res) => {
     res.status(401).json({ message: 'Invalid or expired token' });
   }
 });
-
 
 router.post('/verify', async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];

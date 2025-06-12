@@ -26,24 +26,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-white/10 border border-white/20 backdrop-blur-lg rounded-2xl shadow-xl p-8 space-y-6">
-        <h2 className="text-3xl font-extrabold text-white text-center">
-          Welcome Back
-        </h2>
-        <p className="text-purple-200 text-center text-sm">
-          Sign in to continue
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#0f0f0f] flex items-center justify-center px-4 py-12 font-sans">
+      <div className="w-full max-w-md rounded-2xl p-8 backdrop-blur-md bg-white/5 border border-white/10 shadow-2xl space-y-6 transition-all duration-300">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-white tracking-tight">Welcome Back</h2>
+          <p className="text-sm text-gray-300 mt-1">Sign in to continue your journey</p>
+        </div>
 
         {errorMsg && (
-          <div className="bg-red-500/20 border border-red-500/50 text-red-300 px-4 py-2 rounded-lg text-sm">
+          <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-2 rounded-md text-sm font-medium">
             {errorMsg}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-purple-200 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
               Email Address
             </label>
             <input
@@ -52,12 +50,13 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/5 text-white border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+              placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-purple-200 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
               Password
             </label>
             <input
@@ -66,27 +65,28 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/5 text-white border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+              placeholder="••••••••"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold transition duration-200 shadow-lg"
+            className="w-full py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold transition-transform duration-200 hover:scale-105 shadow-md"
           >
-            Login
+            Sign In
           </button>
         </form>
 
-        <p className="text-sm text-center text-purple-200">
+        <div className="text-center text-sm text-gray-400">
           Don’t have an account?{' '}
-          <span
+          <button
             onClick={() => navigate('/register')}
-            className="text-pink-400 hover:underline cursor-pointer font-medium"
+            className="text-pink-400 hover:underline font-medium transition-colors duration-150"
           >
-            Register
-          </span>
-        </p>
+            Create one
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,41 +1,27 @@
 // seed.js
 import { PrismaClient } from '@prisma/client';
+import { PLAN_FEATURES } from '../utils/planFeatures.js';
 const prisma = new PrismaClient();
 
-async function main() {
-  const plans = [
-    {
-      type: 'FREE',
-      features: [
-        { feature: 'AI_INTERVIEW', level: 'BASIC', quota: 5 },
-        { feature: 'RESUME_ANALYZER', level: 'LIMITED', quota: 10 },
-        { feature: 'INTERVIEW_SCHEDULING', level: 'NONE' },
-        // Add others as needed...
-      ],
-    },
-    {
-      type: 'PRO',
-      features: [
-        { feature: 'AI_INTERVIEW', level: 'ADVANCED', quota: 50 },
-        { feature: 'RESUME_ANALYZER', level: 'FULL' },
-        { feature: 'INTERVIEW_SCHEDULING', level: 'FULL' },
-        // Add all PRO features...
-      ],
-    },
-    {
-      type: 'ENTERPRISE',
-      features: [
-        { feature: 'AI_INTERVIEW', level: 'UNLIMITED' },
-        { feature: 'RESUME_ANALYZER', level: 'UNLIMITED' },
-        { feature: 'INTERVIEW_SCHEDULING', level: 'UNLIMITED' },
-        { feature: 'DISCUSSION_FORUM', level: 'UNLIMITED' },
-        // Add all ENTERPRISE features...
-      ],
-    },
-  ];
+const convertPlanFeaturesToArray = (planFeaturesObj) => {
+  return Object.entries(planFeaturesObj).map(([planType, features]) => ({
+    type: planType,
+    features: Object.entries(features).map(([featureName, { level, quota }]) => {
+      const featureObj = { feature: featureName, level };
+      if (quota !== null && quota !== undefined) {
+        featureObj.quota = quota;
+      }
+      return featureObj;
+    }),
+  }));
+};
 
-  // For each plan, create or find subscription and insert features
+
+async function main() {
+  const plans = convertPlanFeaturesToArray(PLAN_FEATURES);
+
   for (const plan of plans) {
+    console.log(`Processing plan: ${plan.type}`);
     let subscription = await prisma.subscription.findUnique({
       where: { type: plan.type },
     });
@@ -51,10 +37,8 @@ async function main() {
       console.log(`Created subscription plan: ${plan.type}`);
     }
 
-    // Clean existing features for this subscription (optional)
     await prisma.planFeature.deleteMany({ where: { subscriptionId: subscription.id } });
 
-    // Create plan features
     for (const feat of plan.features) {
       await prisma.planFeature.create({
         data: {

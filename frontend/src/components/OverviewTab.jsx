@@ -2,31 +2,15 @@ import React from 'react';
 import { User, FileText, Crown, CheckCircle, Star, Zap, Shield } from 'lucide-react';
 import ResumeUploader from './ResumeUploader';
 import FeatureList from './FeatureList';
+import { getPlanColor, getPlanIcon } from '../utils/designHelper';
 
 export default function OverviewTab({ profile, plan, features, resumeUrl, onResumeChange }) {
-  const getPlanColor = (planName) => {
-    switch (planName) {
-      case 'FREE': return 'from-gray-500 to-gray-600';
-      case 'PRO': return 'from-purple-500 to-pink-500';
-      case 'ENTERPRISE': return 'from-yellow-500 to-orange-500';
-      default: return 'from-gray-500 to-gray-600';
-    }
-  };
-
-  const getPlanIcon = (planName) => {
-    switch (planName) {
-      case 'FREE': return Star;
-      case 'PRO': return Zap;
-      case 'ENTERPRISE': return Shield;
-      default: return Star;
-    }
-  };
-
+ 
   const PlanIcon = getPlanIcon(plan);
 
   return (
     <div className="space-y-8">
-      {/* Stats Cards */}
+    
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
           <div className="flex items-center justify-between">
@@ -77,9 +61,8 @@ export default function OverviewTab({ profile, plan, features, resumeUrl, onResu
         </div>
       </div>
 
-      {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Profile Summary */}
+        
         <div className="lg:col-span-2 bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20">
           <h3 className="text-xl font-semibold text-white mb-6">Profile Summary</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -106,13 +89,11 @@ export default function OverviewTab({ profile, plan, features, resumeUrl, onResu
           </div>
         </div>
 
-        {/* Resume Section */}
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
           <ResumeUploader resumeUrl={resumeUrl} onResumeChange={onResumeChange} />
         </div>
       </div>
 
-      {/* Features Section */}
       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20">
         <h3 className="text-xl font-semibold text-white mb-6">Available Features</h3>
         <FeatureList features={features} />

@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
-  // output    = "../generated/prisma"
 }
 
 datasource db {
@@ -14,9 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Prisma schema for Mock Interview Platform
 
-// Enums
 enum PlanType {
   FREE
   PRO
@@ -30,14 +22,13 @@ enum Role {
 }
 
 enum FeatureType {
-  AI_INTERVIEW
-  ONE_TO_ONE_INTERVIEW
-  RESUME_ANALYZER
-  INTERVIEW_SCHEDULING
-  INTERVIEW_RECORDING
-  AI_INTERVIEW_ANALYSIS
-  DISCUSSION_FORUM
-  DASHBOARD
+    AI_INTERVIEW
+    ONE_TO_ONE_INTERVIEW
+    AI_INTERVIEW_ANALYSIS
+    INTERVIEW_RECORDING
+    RESUME_ANALYZER
+    INTERVIEW_SCHEDULING
+    RESUME_INTEGRATION
 }
 
 enum FeatureLevel {
@@ -49,7 +40,6 @@ enum FeatureLevel {
   UNLIMITED
 }
 
-// User Model
 model User {
   id           String             @id @default(cuid())
   name         String
@@ -73,7 +63,6 @@ model User {
   isOnline  Boolean  @default(false)
 }
 
-// Subscription Plan Model
 model Subscription {
   id        String        @id @default(cuid())
   type      PlanType      @unique
@@ -83,7 +72,6 @@ model Subscription {
   features  PlanFeature[]
 }
 
-// Enum-based Feature Mapping with Details
 model PlanFeature {
   id             String       @id @default(cuid())
   subscriptionId String
@@ -93,7 +81,6 @@ model PlanFeature {
   subscription   Subscription @relation(fields: [subscriptionId], references: [id])
 }
 
-// Tracks user feature usage to enforce quotas
 model UserFeatureUsage {
   id         String      @id @default(cuid())
   userId     String
@@ -102,39 +89,8 @@ model UserFeatureUsage {
   lastUsedAt DateTime?
   user       User        @relation(fields: [userId], references: [id])
 
-  @@unique([userId, feature]) // <--- ADDED THIS LINE
+  @@unique([userId, feature])
 }
-
-// Interview Model
-// model Interview {
-//   id            String     @id @default(cuid())
-//   userId        String
-//   user          User       @relation(fields: [userId], references: [id])
-//   type          String     // HR, Technical, etc.
-//   aiBased       Boolean
-//   scheduledWith String?
-//   scheduledAt   DateTime?
-//   recordingUrl  String?
-//   aiAnalysis    String?
-//   createdAt     DateTime   @default(now())
-//   reports       Report[]
-// }
-
-// model Interview {
-//   id            String     @id @default(cuid())
-//   roomId        String?    @unique // Added roomId field
-//   userId        String
-//   user          User       @relation(fields: [userId], references: [id])
-//   type          String     // HR, Technical, etc.
-//   aiBased       Boolean
-//   scheduledWith String?
-//   scheduledAt   DateTime?
-//   recordingUrl  String?
-//   aiAnalysis    String?
-//   meetLink      String?    // <-- NEW optional field for meet link (one-to-one interview)
-//   createdAt     DateTime   @default(now())
-//   reports       Report[]
-// }
 
 model Interview {
   id              String     @id @default(cuid())
@@ -154,8 +110,6 @@ model Interview {
 }
 
 
-
-// Resume Model
 model Resume {
   id            String   @id @default(cuid())
   userId        String
@@ -166,7 +120,6 @@ model Resume {
   createdAt     DateTime @default(now())
 }
 
-// Report Model
 model Report {
   id          String    @id @default(cuid())
   userId      String
@@ -177,7 +130,6 @@ model Report {
   createdAt   DateTime  @default(now())
 }
 
-// Forum Post Model
 model ForumPost {
   id         String       @id @default(cuid())
   userId     String
@@ -188,7 +140,6 @@ model ForumPost {
   replies    ForumReply[]
 }
 
-// Forum Reply Model
 model ForumReply {
   id        String    @id @default(cuid())
   postId    String
@@ -199,7 +150,6 @@ model ForumReply {
   user      User      @relation(fields: [userId], references: [id])
 }
 
-// Job Recommendation Model
 model JobRecommendation {
   id        String   @id @default(cuid())
   userId    String
