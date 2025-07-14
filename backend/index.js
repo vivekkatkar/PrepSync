@@ -13,6 +13,7 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
 import aiInterviewRoutes from "./routes/aiInterviewRoutes.js";
 import interviewRoutes from "./routes/interviewRoutes.js";
+import paymentRoutes from  "./routes/webhook.js"
 
 import { initializeAiInterviewWebSocket } from './services/aiInterviewWebSocketServer.js';
 import { initializePeerInterviewWebSocket } from './services/peerInterviewWebSocketServer.js';
@@ -70,6 +71,7 @@ app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/services/ai-interview", aiInterviewRoutes);
 app.use("/interviews", interviewRoutes);
+app.use("/razorpay/webhook", paymentRoutes);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

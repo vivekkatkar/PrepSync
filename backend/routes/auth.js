@@ -2,6 +2,8 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../prisma/client.js';
+import {redis} from '../utils/redisClient.js';
+import authenticateToken from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET; 
@@ -85,6 +87,7 @@ router.post('/login', async (req, res) => {
     data: { isOnline: true },
   });
 
+  await redis.set(`online:${user.id}`, 'true', { EX: 60 }); // 60s expiry
   const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
   res.json({ message: 'Login successful', token });
 });
@@ -103,6 +106,7 @@ router.post('/logout', async (req, res) => {
       data: { isOnline: false },
     });
 
+    await redis.del(`online:${user.id}`);
     res.json({ message: 'Logout successful' });
   } catch (err) {
     res.status(401).json({ message: 'Invalid or expired token' });
@@ -121,6 +125,16 @@ router.post('/verify', async (req, res) => {
     res.json({ id: user.id, email: user.email, role: user.role });
   } catch (err) {
     res.status(401).json({ message: 'Token verification failed' });
+  }
+});
+
+router.post('/heartbeat', authenticateToken, async (req, res) => {
+  try {
+    await redis.set(`online:${req.user.id}`, 'true', { EX: 60 }); // renew expiry
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error("Heartbeat error:", err);
+    res.status(500).json({ error: "Failed to refresh session" });
   }
 });
 

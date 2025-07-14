@@ -218,7 +218,6 @@ export async function finalizeInterview(ws) {
 
   sessions.delete(ws);
 }
-// --- END OF MODIFIED FINALIZE INTERVIEW ---
 
 export function endSession(ws) {
   sessions.delete(ws);

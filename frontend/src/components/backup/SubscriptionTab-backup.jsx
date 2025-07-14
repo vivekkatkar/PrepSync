@@ -13,20 +13,11 @@ export default function SubscriptionTab({ currentPlan, onPlanChange }) {
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState('');
 
-  // Load Razorpay script
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => document.body.removeChild(script);
-  }, []);
-
   useEffect(() => {
     const getPlans = async () => {
       try {
         const res = await axios.get(`${API}/user/plans`, getAuthHeaders());
-        setPlans(addPlansDesign(res.data));
+        setPlans(addPlansDesign(res.data)); // <-- set decorated plans
       } catch (err) {
         console.error('Error fetching plans:', err);
         setError('Could not load subscription plans');
@@ -57,54 +48,17 @@ export default function SubscriptionTab({ currentPlan, onPlanChange }) {
     setUpdating(true);
 
     try {
-      const res = await axios.post(
+      await axios.put(
         `${API}/user/subscription`,
         { plan: selected },
         getAuthHeaders()
       );
 
-      if (res.data.success && res.data.plan === 'FREE') {
-        // Free plan applied directly
-        setUserPlan('FREE');
-        setSelected('FREE');
-        onPlanChange('FREE');
-        const refreshed = await axios.get(`${API}/user/features`, getAuthHeaders());
-        setFeatures(refreshed.data.features || []);
-        return;
-      }
-
-      const { razorpayKey, orderId, amount, currency, plan } = res.data;
-
-      const options = {
-        key: razorpayKey,
-        amount,
-        currency,
-        name: 'MockMate',
-        description: `Subscribe to ${plan}`,
-        order_id: orderId,
-        handler: async function (response) {
-          alert('Payment successful! Updating plan...');
-
-          try {
-            const result = await axios.get(`${API}/user/features`, getAuthHeaders());
-            setUserPlan(result.data.plan);
-            setSelected(result.data.plan);
-            setFeatures(result.data.features || []);
-            onPlanChange(result.data.plan);
-          } catch (err) {
-            console.error('Error after payment:', err);
-          }
-        },
-        theme: {
-          color: '#7c3aed'
-        }
-      };
-
-      const razor = new window.Razorpay(options);
-      razor.open();
+      onPlanChange(selected);
+      setUserPlan(selected);
     } catch (err) {
-      console.error('Failed to initiate subscription:', err);
-      setError('Failed to initiate subscription or payment');
+      console.error('Failed to change plan:', err);
+      setError('Failed to update plan');
     } finally {
       setUpdating(false);
     }

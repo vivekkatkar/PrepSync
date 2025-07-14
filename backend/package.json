@@ -5,8 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-     "postinstall": "prisma generate --schema=./prisma/schema.prisma && prisma migrate deploy --schema=./prisma/schema.prisma",
-     "start": "node index.js",
+    "postinstall": "prisma generate --schema=./prisma/schema.prisma && prisma migrate deploy --schema=./prisma/schema.prisma",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -24,6 +24,8 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.1",
     "prisma": "^6.8.2",
+    "razorpay": "^2.9.6",
+    "redis": "^5.5.6",
     "simple-peer": "^9.11.1",
     "socket.io": "^4.8.1",
     "uuid": "^11.1.0",

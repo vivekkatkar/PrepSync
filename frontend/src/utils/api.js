@@ -1,5 +1,6 @@
 export const API = 'http://localhost:3000';
 // export const API = 'https://prepsync.onrender.com';
+export const NOTIFICATION_API = "http://localhost:5000";
 
 export const getAuthHeaders = () => {
   const token = localStorage.getItem('token');

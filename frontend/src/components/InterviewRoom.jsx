@@ -12,6 +12,10 @@ export default function InterviewRoom({
   const { roomId } = useParams();
   const navigate = useNavigate();
 
+  const [isRoomValidated, setIsRoomValidated] = useState(false);
+  const [validating, setValidating] = useState(true);
+
+
   // Refs for media elements, streams, socket, peer connection, recording chunks, initiator role
   const localVid = useRef(null);
   const remoteVid = useRef(null);
@@ -52,7 +56,7 @@ export default function InterviewRoom({
       }
     }
 
-    startLocalStream();
+    // startLocalStream();
 
     // Connect socket.io to the peer-interview namespace
     // socketRef.current = io('http://localhost:3000/peer-interview');
@@ -78,20 +82,28 @@ export default function InterviewRoom({
     });
 
     // Handle being set as initiator (first person to join)
-    socketRef.current.on('you-are-initiator', (data) => {
+    socketRef.current.on('you-are-initiator', async (data) => {
       console.log('You are initiator:', data);
       isInitiator.current = true;
       setRole(data.role);
       setConnectionStatus('Waiting for peer to join...');
+
+        await startLocalStream();
+       setIsRoomValidated(true);
+    setValidating(false);
     });
 
     // Handle being set as receiver (second person to join)
-    socketRef.current.on('you-are-receiver', (data) => {
+    socketRef.current.on('you-are-receiver', async (data) => {
       console.log('You are receiver:', data);
       isInitiator.current = false;
       setRole(data.role);
       setConnectionStatus('Connecting to peer...');
+      
+        await startLocalStream();
       initPeer();
+      setIsRoomValidated(true);
+      setValidating(false);
     });
 
     // Handle when peer is ready to connect (sent to initiator)
@@ -193,6 +205,7 @@ export default function InterviewRoom({
     socketRef.current.on('server-error', (data) => {
       console.error('Server error:', data);
       setError(data.message);
+       setValidating(false);
     });
 
     // Initialize peer connection
@@ -459,6 +472,19 @@ export default function InterviewRoom({
       </div>
     );
   }
+
+  
+  if (validating) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg font-semibold">Validating interview link...</p>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen bg-gray-900 relative overflow-hidden">

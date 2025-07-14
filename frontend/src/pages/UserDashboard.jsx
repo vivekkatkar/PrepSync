@@ -8,6 +8,8 @@ import ProfileTab from '../components/ProfileTab';
 import SubscriptionTab from '../components/SubscriptionTab';
 import ReportsTab from '../components/ReportTab';
 import { navOptions } from '../utils/helpers';
+import { useNotification } from "../hooks/useNotification";
+
 
 export default function UserDashboard() {
   const [profile, setProfile] = useState(null);
@@ -17,6 +19,20 @@ export default function UserDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
+
+  const [notifications, setNotifications] = useState([]);
+  const [showBellAlert, setShowBellAlert] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  setInterval(() => {
+    axios.post(`${API}/auth/heartbeat`, null, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    }).catch(error => {
+      console.error('Heartbeat error:', error);
+    });
+  }, 30000);
 
   const handleLogout = async () => {
     try {
@@ -38,6 +54,8 @@ export default function UserDashboard() {
         setProfile(profileRes.data);
         setResumeUrl(profileRes.data.resumeUrl || null);
 
+        console.log(profileRes);
+
         const featuresRes = await axios.get(`${API}/user/features`, getAuthHeaders());
         setPlan(featuresRes.data.plan);
         setFeatures(featuresRes.data.features);
@@ -50,6 +68,11 @@ export default function UserDashboard() {
     }
     fetchData();
   }, []);
+
+  useNotification(profile?.id, (data) => {
+    setNotifications((prev) => [...prev, data]);
+    setShowBellAlert(true);
+  });
 
   const handleResumeChange = (newUrl) => setResumeUrl(newUrl);
   const handlePlanChange = (newPlan) => {
@@ -94,9 +117,58 @@ export default function UserDashboard() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="p-2 text-gray-400 hover:text-white transition-transform hover:scale-105">
+              {/* <button className="p-2 text-gray-400 hover:text-white transition-transform hover:scale-105">
                 <Bell className="w-5 h-5" />
-              </button>
+              </button> */}
+
+              <div className="relative">
+                <button
+                  className={`p-2 transition-transform hover:scale-105 ${
+                    showBellAlert ? 'text-yellow-400 animate-bounce' : 'text-gray-400 hover:text-white'
+                  }`}
+                  onClick={() => {
+                    setShowBellAlert(false);
+                    setShowNotifications((prev) => !prev);
+                  }}
+                >
+                  <Bell className="w-5 h-5" />
+                </button>
+
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-lg z-50 max-h-96 overflow-auto backdrop-blur-md">
+                    <div className="flex justify-between items-center p-3 border-b border-white/10">
+                      <p className="text-sm font-semibold text-white">Notifications</p>
+                      <button
+                        className="text-gray-400 hover:text-red-400 text-lg font-bold"
+                        onClick={() => setShowNotifications(false)}
+                      >
+                        ×
+                      </button>
+                    </div>
+
+                    {notifications.length === 0 ? (
+                      <div className="text-center text-gray-400 p-4">No notifications yet</div>
+                    ) : (
+                      notifications
+                        .slice()
+                        .reverse()
+                        .map((n, idx) => (
+                          <div
+                            key={idx}
+                            className="px-4 py-3 border-b border-white/5 hover:bg-white/5 cursor-pointer"
+                            onClick={() => window.open(n.meetLink, '_blank')}
+                          >
+                            <p className="text-sm text-white">{n.message}</p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              From: {n.fromUser?.name || 'Someone'}
+                            </p>
+                          </div>
+                        ))
+                    )}
+                  </div>
+                )}
+              </div>
+
               <button className="p-2 text-gray-400 hover:text-white transition-transform hover:scale-105">
                 <Settings className="w-5 h-5" />
               </button>

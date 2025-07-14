@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
 import axios from "../config/config.js"
-// import { BACKEND_URL } from '../config/backendConfig.js';
 import { API } from '../utils/api.js';
-
 
 export default function CreateInterview() {
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [featureInfo, setFeatureInfo] = useState(null);
+
+   setInterval(() => {
+    axios.post(`${API}/auth/heartbeat`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).catch(error => {
+      console.error('Heartbeat error:', error);
+    });
+  }, 30000);
 
   const fetchInterviews = async () => {
     const token = localStorage.getItem('token');
@@ -164,7 +171,6 @@ export default function CreateInterview() {
           </button>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="bg-red-500/20 backdrop-blur-lg border border-red-400/30 rounded-2xl p-6 mb-8 shadow-2xl">
             <div className="flex items-center gap-3">
@@ -174,7 +180,6 @@ export default function CreateInterview() {
           </div>
         )}
 
-        {/* Feature Info */}
         {featureInfo && (
           <div className="bg-emerald-500/20 backdrop-blur-lg border border-emerald-400/30 rounded-2xl p-8 mb-8 shadow-2xl">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -210,7 +215,6 @@ export default function CreateInterview() {
           </div>
         )}
 
-        {/* Interviews Section Header */}
         <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 mb-8 shadow-2xl">
           <h2 className="text-2xl font-semibold text-white flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center shadow-lg shadow-purple-500/25">
@@ -220,7 +224,6 @@ export default function CreateInterview() {
           </h2>
         </div>
 
-        {/* Interviews Grid */}
         {loading && interviews.length === 0 ? (
           <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-12 text-center shadow-2xl">
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-cyan-500 mx-auto mb-4"></div>
@@ -238,7 +241,7 @@ export default function CreateInterview() {
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {interviews.map((interview) => (
               <div key={interview.id} className="bg-white/8 backdrop-blur-lg border border-white/20 rounded-xl p-6 hover:bg-white/12 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 group">
-                {/* Card Header */}
+                
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
@@ -341,7 +344,6 @@ export default function CreateInterview() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex flex-wrap gap-2">
                   <button 
                     onClick={() => joinInterview(interview.roomId)}

@@ -9,12 +9,16 @@ export function initializePeerInterviewWebSocket(io) {
     // --- Join Room Logic ---
     socket.on('join-room', async ({ roomId, userId }) => {
       try {
-        // Validate if interview room exists in DB
         const interview = await prisma.interview.findUnique({ where: { roomId } });
         if (!interview) {
           socket.emit('server-error', { message: 'Room not found' });
           return;
         }
+
+         if (interview.expiryDate && new Date(interview.expiryDate) < new Date()) {
+            socket.emit('server-error', { message: 'This interview link has expired.' });
+            return;
+          }
 
         // Get current clients in room (excluding the current socket)
         const roomSockets = Array.from(peerNamespace.adapter.rooms.get(roomId) || []);

@@ -102,6 +102,7 @@ model Interview {
   scheduledWithId String?
   scheduledWith   User?      @relation("ScheduledWithUser", fields: [scheduledWithId], references: [id])
   scheduledAt     DateTime?
+  expiryDate      DateTime?
   recordingUrl    String?
   aiAnalysis      String?
   meetLink        String?    // Meet link for one-to-one interview

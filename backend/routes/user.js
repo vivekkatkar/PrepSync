@@ -5,6 +5,7 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 import { PLAN_FEATURES } from '../utils/planFeatures.js';
+import { razorpay } from '../utils/razorpay.js';
 
 const router = express.Router();
 
@@ -70,6 +71,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
       select: {
+        id: true,
         name: true,
         email: true,
         mobile: true,
@@ -209,14 +211,16 @@ router.get('/plans', authenticateToken, async (req, res) => {
   return res.json(formattedPlans);
 });
 
-router.put('/subscription', authenticateToken, async (req, res) => {
+router.post('/subscription', authenticateToken, async (req, res) => {
   try {
     const { plan } = req.body;
     const validPlans = ['FREE', 'PRO', 'ENTERPRISE'];
+
     if (!validPlans.includes(plan)) {
       return res.status(400).json({ message: 'Invalid plan type' });
     }
 
+    console.log(plan);
     const sub = await prisma.subscription.findUnique({
       where: { type: plan },
     });
@@ -225,17 +229,41 @@ router.put('/subscription', authenticateToken, async (req, res) => {
       return res.status(404).json({ message: 'Subscription plan not found' });
     }
 
-    await prisma.user.update({
-      where: { id: req.user.id },
-      data: { subscriptionId: sub.id },
+    if (plan === 'FREE') {
+      await prisma.user.update({
+        where: { id: req.user.id },
+        data: { subscriptionId: sub.id },
+      });
+      return res.json({ message: 'Subscribed to FREE plan' });
+    }
+
+    const price = (plan == "PRO" ? 10 : 20);
+    const shortReceipt = `rcpt_${Date.now().toString().slice(-8)}`;
+
+    const order = await razorpay.orders.create({
+      amount: price * 100, 
+      currency: 'INR',
+      receipt: shortReceipt,
+      notes: {
+        userId: req.user.id.toString(),
+        planType: plan
+      }
     });
 
-    return res.json({ plan });
+    return res.json({
+      success: true,
+      razorpayKey: process.env.RAZORPAY_KEY_ID,
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      plan
+    });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: 'Failed to update subscription plan' });
+    return res.status(500).json({ message: 'Subscription initiation failed' });
   }
 });
+
 
 router.get('/reports', authenticateToken, async (req, res) => {
   try {
